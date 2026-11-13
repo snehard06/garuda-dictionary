@@ -1,0 +1,139 @@
+{% extends "dictionary/base.html" %}
+{% load static %}
+
+{% block title %}About — Garuda Dictionary{% endblock %}
+{% block meta_description %}About the Garuda Dictionary — a student demonstration dictionary app built for Garuda Prakashan × Rishihood University.{% endblock %}
+
+{% block content %}
+
+<!-- ═══ ABOUT HERO ═════════════════════════════════════════════════════ -->
+<section class="about-hero" aria-labelledby="about-heading">
+  <div class="container">
+    <span class="section-header__eyebrow">About the Project</span>
+    <h1 id="about-heading" style="margin-top:0.75rem; margin-bottom:1rem;">Garuda Dictionary</h1>
+    <p style="font-size:1.15rem; color:var(--charcoal-muted); max-width:580px; margin:0 auto;">
+      A thoughtful Hindi–English dictionary experience built as a demonstration project
+      for the <strong>Garuda Prakashan × Rishihood University Live Project Assignment</strong>.
+    </p>
+    <div class="divider" style="margin-top:2rem;"></div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT CONTENT ══════════════════════════════════════════════════ -->
+<div class="container">
+  <div class="about-content">
+
+    <!-- Disclaimer -->
+    <div class="disclaimer-box">
+      <div class="disclaimer-box__icon">⚠️</div>
+      <div class="disclaimer-box__title">Demonstration Project Notice</div>
+      <p>
+        This is a <strong>student demonstration project</strong>. The dictionary currently contains
+        {{ total_count }} illustrative entries that have <strong>not been verified</strong> by
+        Garuda Prakashan's editorial team. This application is not an official Garuda Prakashan product.
+        All example sentences, etymologies, and definitions are based on common usage and standard references,
+        and should be reviewed by qualified linguists before any official use.
+      </p>
+    </div>
+
+    <h2>Project Overview</h2>
+    <p>
+      Garuda Dictionary is a full-stack web application built with Django (Python) and vanilla JavaScript.
+      It demonstrates a usable, well-designed Hindi–English dictionary with multi-script search support —
+      a genuine product challenge, not a tutorial exercise.
+    </p>
+    <p>
+      The application was designed to serve users who think in Hindi but may type in English,
+      use Romanised transliterations with varying spellings, or who may know an English concept
+      and want to find the Hindi word.
+    </p>
+
+    <h2>Problem Statement</h2>
+    <p>
+      Hindi speakers frequently encounter friction when searching for dictionary entries online.
+      Common problems include:
+    </p>
+    <ul style="margin:0.75rem 0 1rem 1.5rem; color:var(--slate); line-height:2; list-style:disc;">
+      <li>No single accepted Romanisation of Hindi words (dharma vs dharm vs dharama)</li>
+      <li>Dictionary apps that require Devanagari input exclusively</li>
+      <li>Poor handling of diacritical marks and Unicode normalisation</li>
+      <li>Lack of alternate spelling matching</li>
+      <li>Minimal Devanagari font support in dictionary UIs</li>
+    </ul>
+    <p>
+      Garuda Dictionary addresses each of these by supporting explicit alternate Romanisations per entry,
+      NFC Unicode normalisation, case-insensitive search, and partial prefix matching.
+    </p>
+
+    <h2>Search Algorithm</h2>
+    <p>Search operates in six ranked tiers:</p>
+    <ol style="margin:0.75rem 0 1rem 1.5rem; color:var(--slate); line-height:2.2; list-style:decimal;">
+      <li><strong>Exact Devanagari match</strong> — highest priority</li>
+      <li><strong>Exact Romanised match</strong> — case-insensitive</li>
+      <li><strong>Alternate Romanisation match</strong> — explicit comma-separated variants per entry</li>
+      <li><strong>Prefix match</strong> — Devanagari or Romanised prefix</li>
+      <li><strong>Partial match</strong> — substring in Devanagari, Romanised, or alternates</li>
+      <li><strong>English meaning match</strong> — keyword in meaning or definition</li>
+    </ol>
+    <p>
+      Results are sorted by rank then alphabetically. Unicode NFC normalisation is applied
+      before matching to handle equivalent Devanagari representations.
+    </p>
+
+    <h2>Technology Stack</h2>
+    <p>
+      <strong>Backend:</strong> Python 3, Django, SQLite (via Django ORM)<br>
+      <strong>Frontend:</strong> Django Templates (HTML5), CSS3 (custom design system), Vanilla JavaScript<br>
+      <strong>No external JS frameworks</strong> — all interactions use browser-native APIs.
+    </p>
+
+    <h2>Design Decisions</h2>
+    <p>
+      Django was chosen because it provides a clean MVC architecture, built-in admin interface,
+      and ORM — all without requiring a separate API layer for a server-rendered application.
+      SQLite is sufficient for a demonstration dataset and requires zero configuration.
+      Vanilla JavaScript was chosen to keep the code accessible to beginners and avoid build tooling complexity.
+    </p>
+    <p>
+      The design is inspired by Indian literary heritage — using warm ivory, saffron, and terracotta tones —
+      while maintaining the clarity and usability standards of contemporary digital publishing.
+      The <em>Noto Serif Devanagari</em> and <em>Noto Sans Devanagari</em> fonts from Google Fonts
+      provide high-quality Devanagari rendering across all platforms.
+    </p>
+
+    <h2>Limitations</h2>
+    <ul style="margin:0.75rem 0 1rem 1.5rem; color:var(--slate); line-height:2; list-style:disc;">
+      <li>Dictionary contains ~{{ total_count }} illustrative entries only</li>
+      <li>No automatic Devanagari-to-Romanised transliteration (by design — this avoids inaccuracies)</li>
+      <li>No audio pronunciation</li>
+      <li>No user accounts or word bookmarking</li>
+      <li>No synonym/antonym relationships</li>
+      <li>Demonstration content is not editorially verified</li>
+    </ul>
+
+    <h2>Future Improvements</h2>
+    <ul style="margin:0.75rem 0 1rem 1.5rem; color:var(--slate); line-height:2; list-style:disc;">
+      <li>Integration of Garuda Prakashan's authorised, verified dictionary dataset</li>
+      <li>Audio pronunciation using recorded or synthesised audio</li>
+      <li>Full-text search using PostgreSQL or Elasticsearch for large datasets</li>
+      <li>User bookmarks and word-of-day notifications</li>
+      <li>Synonym and antonym cross-links</li>
+      <li>Multi-language support (Gujarati, Bengali, Tamil, etc.)</li>
+      <li>Progressive Web App (PWA) for offline access</li>
+    </ul>
+
+    <h2>Project Attribution</h2>
+    <p>
+      Built as the <strong>Dictionary App Track</strong> assignment for the
+      <strong>Garuda Prakashan × Rishihood University Live Project</strong>.
+      Garuda Prakashan is a publisher of Hindi and Sanskrit educational materials.
+    </p>
+    <p>
+      This project is a student work product and does not represent Garuda Prakashan's
+      official digital products or services.
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

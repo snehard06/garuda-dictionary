@@ -1,0 +1,163 @@
+{% extends "dictionary/base.html" %}
+{% load static %}
+
+{% block title %}Explore Hindi Words{% endblock %}
+{% block meta_description %}Browse all words in the Garuda Dictionary — filter by letter, part of speech, or search for a specific word.{% endblock %}
+
+{% block content %}
+
+<!-- ═══ EXPLORE HEADER ══════════════════════════════════════════════════ -->
+<section class="explore-header" aria-labelledby="explore-heading">
+  <div class="container">
+    <h1 id="explore-heading" style="margin-bottom:0.5rem;">Explore Words</h1>
+    <p style="color:var(--slate); margin-bottom:1.5rem;">
+      Browse {{ total_count }} word{{ total_count|pluralize }} — filter by letter or part of speech.
+    </p>
+
+    <!-- Search bar -->
+    <div class="search-wrapper" role="search" style="max-width:520px; margin:0;">
+      <form class="search-form" method="GET" action="{% url 'dictionary:explore' %}">
+        <label for="search-input" class="sr-only">Search words</label>
+        <span class="search-form__icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </span>
+        <input
+          type="search"
+          id="search-input"
+          name="q"
+          class="search-form__input"
+          placeholder="Filter words..."
+          value="{{ query }}"
+          autocomplete="off"
+          aria-label="Filter words"
+          aria-controls="autocomplete-dropdown"
+          style="font-size:0.95rem;"
+        />
+        <button type="submit" class="search-form__btn" style="font-size:0.85rem;">Filter</button>
+      </form>
+      <div class="autocomplete-dropdown" id="autocomplete-dropdown" role="listbox" style="display:none;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FILTERS ════════════════════════════════════════════════════════ -->
+<div style="background:white; border-bottom:1px solid var(--color-border);">
+  <div class="container">
+
+    <!-- Part of speech filter -->
+    <div class="explore-filters" aria-label="Filter by part of speech">
+      <span class="filter-label">Part of Speech:</span>
+      <a href="{% url 'dictionary:explore' %}{% if letter_filter %}?letter={{ letter_filter|lower }}{% endif %}"
+         class="filter-btn{% if not pos_filter %} active{% endif %}"
+         data-pos="">
+        All
+      </a>
+      {% for value, label in pos_choices %}
+      <a href="?pos={{ value }}{% if letter_filter %}&letter={{ letter_filter|lower }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+         class="filter-btn pos-filter-btn{% if pos_filter == value %} active{% endif %}"
+         data-pos="{{ value }}">
+        {{ label }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Letter filter -->
+    <div class="letter-filter" aria-label="Filter by first letter">
+      <a href="{% url 'dictionary:explore' %}{% if pos_filter %}?pos={{ pos_filter }}{% endif %}"
+         class="letter-btn{% if not letter_filter %} active{% endif %}"
+         data-letter=""
+         aria-label="All letters">
+        All
+      </a>
+      {% for letter in letters %}
+      <a href="?letter={{ letter|lower }}{% if pos_filter %}&pos={{ pos_filter }}{% endif %}"
+         class="letter-btn{% if letter_filter == letter %} active{% endif %}"
+         data-letter="{{ letter }}"
+         aria-label="Words starting with {{ letter }}">
+        {{ letter }}
+      </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ WORDS GRID ══════════════════════════════════════════════════════ -->
+<div class="container section">
+  {% if page_obj %}
+    {% if page_obj.object_list %}
+      <div class="cards-grid" aria-label="Word list">
+        {% for entry in page_obj %}
+        <a href="{% url 'dictionary:word_detail' entry.pk %}"
+           class="word-card"
+           aria-label="{{ entry.romanised_word }} — {{ entry.english_meaning }}">
+          <div class="word-card__devanagari" lang="hi">{{ entry.devanagari_word }}</div>
+          <div class="word-card__romanised">{{ entry.romanised_word }}</div>
+          <div class="word-card__meaning">{{ entry.english_meaning }}</div>
+          <span class="word-card__pos">{{ entry.get_part_of_speech_display }}</span>
+        </a>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if page_obj.has_other_pages %}
+      <nav class="pagination" aria-label="Page navigation">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if pos_filter %}&pos={{ pos_filter }}{% endif %}{% if letter_filter %}&letter={{ letter_filter|lower }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+           class="page-link" aria-label="Previous page">
+          ←
+        </a>
+        {% else %}
+        <span class="page-link disabled" aria-hidden="true">←</span>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+          <span class="page-link active" aria-current="page">{{ num }}</span>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a href="?page={{ num }}{% if pos_filter %}&pos={{ pos_filter }}{% endif %}{% if letter_filter %}&letter={{ letter_filter|lower }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+             class="page-link">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if pos_filter %}&pos={{ pos_filter }}{% endif %}{% if letter_filter %}&letter={{ letter_filter|lower }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+           class="page-link" aria-label="Next page">
+          →
+        </a>
+        {% else %}
+        <span class="page-link disabled" aria-hidden="true">→</span>
+        {% endif %}
+      </nav>
+      {% endif %}
+
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-state__icon" aria-hidden="true">📖</div>
+        <h2 class="empty-state__title">No words found</h2>
+        <p class="empty-state__message">
+          No words match the current filter. Try a different letter or part of speech.
+        </p>
+        <a href="{% url 'dictionary:explore' %}" class="btn btn--outline">Clear filters</a>
+      </div>
+    {% endif %}
+  {% endif %}
+</div>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+{% endblock %}

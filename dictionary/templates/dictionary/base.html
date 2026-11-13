@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{% block meta_description %}Garuda Dictionary — A thoughtful dictionary experience connecting Devanagari, Romanised Hindi, and English.{% endblock %}" />
+  <meta name="theme-color" content="#E8832A" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{% block og_title %}Garuda Dictionary{% endblock %}" />
+  <meta property="og:description" content="Discover Indian words in Devanagari, Romanised Hindi, and English." />
+  <meta property="og:type" content="website" />
+
+  <title>{% block title %}Garuda Dictionary{% endblock %} — Garuda Prakashan</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="{% static 'dictionary/css/style.css' %}" />
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- Demo notice -->
+<div class="demo-notice" role="banner">
+  <strong>Demo Project:</strong> This is a student assignment built for Garuda Prakashan × Rishihood University. Dictionary content is illustrative and not officially verified.
+</div>
+
+<!-- ═══ NAVBAR ═══════════════════════════════════════════════════════════ -->
+<header>
+  <nav class="navbar" id="main-navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="navbar__inner">
+
+        <!-- Brand -->
+        <a href="{% url 'dictionary:home' %}" class="navbar__brand" aria-label="Garuda Dictionary Home">
+          <div class="navbar__logo-mark" aria-hidden="true">ग</div>
+          <div class="navbar__brand-text">
+            <span class="name">Garuda Dictionary</span>
+            <span class="tagline">Garuda Prakashan</span>
+          </div>
+        </a>
+
+        <!-- Desktop nav -->
+        <ul class="navbar__nav" id="nav-links" role="list">
+          <li><a href="{% url 'dictionary:home' %}">Home</a></li>
+          <li><a href="{% url 'dictionary:explore' %}">Explore Words</a></li>
+          <li><a href="{% url 'dictionary:about' %}">About</a></li>
+          <li>
+            <a href="{% url 'dictionary:search' %}" aria-label="Search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Mobile toggle -->
+        <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- ═══ MAIN CONTENT ════════════════════════════════════════════════════ -->
+<main id="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ═══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer__inner">
+      <!-- Brand -->
+      <div class="footer__brand">
+        <div class="navbar__logo-mark" aria-hidden="true" style="margin-bottom:1rem;">ग</div>
+        <div class="footer__brand-name">Garuda Dictionary</div>
+        <p class="footer__brand-desc">
+          A student demonstration of a Hindi dictionary application, built as part of the
+          Garuda Prakashan × Rishihood University Live Project Assignment.
+        </p>
+      </div>
+
+      <!-- Navigation -->
+      <div>
+        <div class="footer__col-title">Navigate</div>
+        <ul class="footer__links" role="list">
+          <li><a href="{% url 'dictionary:home' %}">Home</a></li>
+          <li><a href="{% url 'dictionary:explore' %}">Explore Words</a></li>
+          <li><a href="{% url 'dictionary:search' %}">Search</a></li>
+          <li><a href="{% url 'dictionary:about' %}">About</a></li>
+        </ul>
+      </div>
+
+      <!-- Project info -->
+      <div>
+        <div class="footer__col-title">Project</div>
+        <ul class="footer__links" role="list">
+          <li><a href="{% url 'dictionary:about' %}">About the App</a></li>
+          <li><a href="https://garudaprakashan.com" target="_blank" rel="noopener noreferrer">Garuda Prakashan</a></li>
+          <li><a href="https://rishihood.edu.in" target="_blank" rel="noopener noreferrer">Rishihood University</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer__bottom">
+      <p class="footer__bottom-text">
+        Built as a live project assignment for
+        <a href="https://garudaprakashan.com" target="_blank" rel="noopener noreferrer">Garuda Prakashan</a>
+        × Rishihood University. Dictionary content is illustrative only.
+      </p>
+      <p class="footer__bottom-text">
+        Stack: Django · SQLite · Vanilla JS · CSS
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="{% static 'dictionary/js/main.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+
+</body>
+</html>
