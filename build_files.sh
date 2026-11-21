@@ -1,18 +1,25 @@
 #!/bin/bash
 set -e
 
-echo "Installing dependencies..."
-# Vercel's Python environment is managed by uv (PEP 668).
-# Use 'uv pip install --system' to install into the system-managed environment.
-uv pip install --system -r requirements.txt
+# @vercel/static-build runs with system Python 3.9 at /usr, regardless of
+# .python-version. We use uv to explicitly install and activate Python 3.12,
+# then create an isolated venv so all dependencies resolve correctly.
+
+echo "Installing Python 3.12 via uv..."
+uv python install 3.12
+
+echo "Creating virtual environment with Python 3.12..."
+uv venv .venv --python 3.12
+
+echo "Installing dependencies into Python 3.12 venv..."
+uv pip install -r requirements.txt
 
 echo "Collecting static files..."
-python manage.py collectstatic --noinput
+uv run python manage.py collectstatic --noinput
 
 # NOTE: 'manage.py migrate' is intentionally NOT run here.
-# @vercel/static-build runs in a network-restricted build context and cannot
-# reach the Neon PostgreSQL database. Run migrations separately via:
-#   vercel run python manage.py migrate --noinput
-# or once from your local machine with DATABASE_URL set.
+# @vercel/static-build has no network access to Neon PostgreSQL during build.
+# Run migrations separately from your local machine with DATABASE_URL set:
+#   DATABASE_URL="..." python manage.py migrate --noinput
 
 echo "Build complete!"
