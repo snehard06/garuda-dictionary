@@ -1,4 +1,4 @@
-# Garuda Dictionary
+# Garuda Dictionary (https://garuda-dictionary-red.vercel.app/)
 
 **Garuda Prakashan × Rishihood University — Live Project Assignment — Dictionary App Track**
 
